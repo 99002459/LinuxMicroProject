@@ -14,6 +14,7 @@ while IFS=, read -r name email repo; do
     reponame=`echo $repo | cut -d'/' -f5`
     build=`find $reponame -name Makefile -exec dirname {} \;`
     make -C $build
+    make run -C $build
     if [ "$?" == 0 ]; then
       BUILD_SUCC="Build Successful"
     else
@@ -25,8 +26,8 @@ while IFS=, read -r name email repo; do
     echo "dir = $FIN_VAL"
     valgrind "./$FIN_VAL" 2> valgrinr.csv
     VALG=`grep "ERROR SUMMARY" valgrinr.csv`
-    echo "ERR = ${VALG:23:5}"
-    echo "$name, $email, $repo, $CLONE_STAT, $BUILD_SUCC, $err, ${VALG:25:1}" >> log.csv      
+    echo "ERR = ${VALG:25:1}"
+    echo "$name, $email, $repo, $CLONE_STAT, $BUILD_SUCC, $err, ${VALG:25:1}" > log.csv      
   fi
     
 done < Input.csv
